@@ -3,4 +3,6 @@
 
 HurricanePredictionDraft1 : Main code where magic happens
 
-Helper                    : Has functions and model stuff we use
+Helper                    : Has the functions we use
+
+Factory                   : Has the models we use
