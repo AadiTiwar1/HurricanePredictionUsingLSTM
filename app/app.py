@@ -10,3 +10,7 @@ st.markdown(
 
     """
 )
+
+# **** FOR REFERENCE ****
+# ? GH LINK: https://github.com/cloudera/CML_AMP_Intelligent_Writing_Assistance
+# ? Streamlit Docs: https://docs.streamlit.io/en/stable/
