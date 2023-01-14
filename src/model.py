@@ -66,7 +66,7 @@ df.drop(['status_of_system', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8','Unnamed: 
 df['date'] = pd.to_datetime(df['date'], format = "%Y%m%d").dt.strftime('%Y-%m-%d')
 
 
-df['tmrw windspeed'] =  df['max_sustained_wind'].shift(-1)
+df['windspeed'] =  df['max_sustained_wind'].shift(-1)
 df['date'] = df['date'].apply(lambda x: float(x.split()[0].replace('-', '')))
 df['latitude'] = df['latitude'].map(lambda x: float(x.rstrip('NEWS')))
 df['longitude'] = df['longitude'].map(lambda x: float(x.rstrip('NEWS')))
@@ -76,12 +76,12 @@ df['max_sustained_wind'] =  df['max_sustained_wind'].fillna(method='ffill', limi
 df['max_sustained_wind'] =  df['max_sustained_wind'].fillna(method='bfill', limit=1000)
 df['central_pressure'] = df['central_pressure'].fillna(method='ffill', limit=1000)
 df['central_pressure'] = df['central_pressure'].fillna(method='bfill', limit=1000)
-df['tmrw windspeed'] = df['tmrw windspeed'].fillna(method='ffill', limit=1000)
-df['tmrw windspeed'] = df['tmrw windspeed'].fillna(method='bfill', limit=1000)
+df['windspeed'] = df['windspeed'].fillna(method='ffill', limit=1000)
+df['windspeed'] = df['windspeed'].fillna(method='bfill', limit=1000)
 
 
-target = "tmrw windspeed"
-features = list(df.columns.difference(["date", 'tmrw windspeed']))
+target = "windspeed"
+features = list(df.columns.difference(["date", 'windspeed']))
 
 
 # Data Processing
@@ -150,7 +150,6 @@ def train_model(data_loader, model, loss_function, optimizer):
         total_loss += loss.item()
 
     avg_loss = total_loss / num_batches
-    print(f"Train loss: {avg_loss}")
     return avg_loss
 
 def test_model(data_loader, model, loss_function):
@@ -165,12 +164,10 @@ def test_model(data_loader, model, loss_function):
             total_loss += loss_function(output, y).item()
 
     avg_loss = total_loss / num_batches
-    print(f"Test loss: {avg_loss}")
     return avg_loss
 
 # Try to load the model from disk if it exists
 if os.path.exists('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt'):
-    # FIXME: does not load model: ERROR: AttributeError: 'collections.OrderedDict' object has no attribute 'eval'
     model.load_state_dict(torch.load('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt'))
     model.eval()
 else:
@@ -180,21 +177,18 @@ else:
     
     classical_loss_train = []
     classical_loss_test = []
-    print("Untrained test\n--------")
+
     test_loss = test_model(test_loader, model, loss_function)
-    print()
     classical_loss_test.append(test_loss)
 
     for ix_epoch in range(6):
-        print(f"Epoch {ix_epoch}\n---------")
         train_loss = train_model(train_loader, model, loss_function, optimizer=optimizer)
         test_loss = test_model(test_loader, model, loss_function)
-        print()
+
         classical_loss_train.append(train_loss)
         classical_loss_test.append(test_loss)
 
     # Save model
-    saved_model = model
     torch.save(model.state_dict(), "C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt")
 
 
@@ -214,7 +208,7 @@ def predict(data_loader, model):
 
 train_eval_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False)
 
-ystar_col = "Model forecast"
+ystar_col = "Model Forecast"
 df_train[ystar_col] = predict(train_eval_loader, model).numpy()
 df_test[ystar_col] = predict(test_loader, model).numpy()
 
