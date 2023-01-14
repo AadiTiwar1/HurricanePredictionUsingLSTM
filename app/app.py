@@ -1,8 +1,8 @@
 import streamlit as st
-import src.model as model # import the model.py file to predict and access the model and graphs
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import src.model as model
 
 # add images of the prediction graph and the loss function graphs (put them in static/images folder)
 # connect to model in src/model.py and run the predict function when the user submits their values to predict on
@@ -27,17 +27,22 @@ st.markdown(
 )
 
 # Section 2 shows graphs of the loss function and the prediction graph
-size = model.size
-df_out = model.df_out
 
-chart_data = pd.DataFrame(
-    df_out,
-    columns = ["Model forecast", "tmrw windspeed"]
+chart_data_windspeed = pd.DataFrame(
+    model.df_out,
+    columns = ["tmrw windspeed"]
 )
 
-st.line_chart(chart_data)
+chart_data_predict = pd.DataFrame(
+    model.df_out,
+    columns = ["Model forecast"]
+)
 
-st.title("")
+st.header("Historical Data")
+st.line_chart(chart_data_windspeed)
+st.header("Predicted Data")
+st.line_chart(chart_data_predict)
+
 
 # Section 3 is where the user can make predictions
 

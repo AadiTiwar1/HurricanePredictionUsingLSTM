@@ -4,11 +4,61 @@ import numpy as np
 import torch
 from torch.utils.data import DataLoader
 from torch import nn
-from utils.Factory import SequenceDataset, ShallowRegressionLSTM
+import torch
+from torch import nn
+from torch.utils.data import Dataset
+import os
 
+class SequenceDataset(Dataset):
+    def __init__(self, dataframe, target, features, sequence_length=5):
+        self.features = features
+        self.target = target
+        self.sequence_length = sequence_length
+        self.y = torch.tensor(dataframe[self.target].values).float()
+        self.X = torch.tensor(dataframe[self.features].values).float()
+
+    def __len__(self):
+        return self.X.shape[0]
+
+    def __getitem__(self, i): 
+        if i >= self.sequence_length - 1:
+            i_start = i - self.sequence_length + 1
+            x = self.X[i_start:(i + 1), :]
+        else:
+            padding = self.X[0].repeat(self.sequence_length - i - 1, 1)
+            x = self.X[0:(i + 1), :]
+            x = torch.cat((padding, x), 0)
+
+        return x, self.y[i]
+
+class ShallowRegressionLSTM(nn.Module):
+    def __init__(self, num_sensors, hidden_units):
+        super(ShallowRegressionLSTM, self).__init__()
+        self.num_sensors = num_sensors  # this is the number of features
+        self.hidden_units = hidden_units
+        self.num_layers = 1
+
+        self.lstm = nn.LSTM(
+            input_size=num_sensors,
+            hidden_size=hidden_units,
+            batch_first=True,
+            num_layers=self.num_layers
+        )
+
+        self.linear = nn.Linear(in_features=self.hidden_units, out_features=1)
+
+    def forward(self, x):
+        batch_size = x.shape[0]
+        h0 = torch.zeros(self.num_layers, batch_size, self.hidden_units).requires_grad_()
+        c0 = torch.zeros(self.num_layers, batch_size, self.hidden_units).requires_grad_()
+        
+        _, (hn, _) = self.lstm(x, (h0, c0))
+        out = self.linear(hn[0]).flatten()  # First dim of Hn is num_layers, which is set to 1 above.
+
+        return out
+    
 # First, we read in the data, dropping the index and the date.
-
-df = pd.read_csv('C:\\Users\\Aarus\\Documents\\code\\HurricanePredictionUsingLSTM\\static\\dataset\\atlantic (2).csv')
+df = pd.read_csv('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/static/dataset/atlantic (2).csv')
 
 df.drop(['status_of_system', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8','Unnamed: 9', 
         'Unnamed: 10', 'Unnamed: 11','Unnamed: 12', 'Unnamed: 13', 'Unnamed: 14', 
@@ -37,7 +87,7 @@ features = list(df.columns.difference(["date", 'tmrw windspeed']))
 # Data Processing
 # To process the data, we first split it into training and test data, where two-thirds of the data is used for training, and the last third is used for testing.
 
-size = int(len(df) * 0.7)
+size = int(len(df) * 0.8)
 df_train = df.loc[:size].copy()
 df_test = df.loc[size:].copy()
 
@@ -79,7 +129,10 @@ train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
 X, y = next(iter(train_loader))
+learning_rate = 0.0001
+num_hidden_units = 16
 
+model = ShallowRegressionLSTM(num_sensors=len(features), hidden_units=num_hidden_units)
 
 def train_model(data_loader, model, loss_function, optimizer):
     num_batches = len(data_loader)
@@ -115,30 +168,35 @@ def test_model(data_loader, model, loss_function):
     print(f"Test loss: {avg_loss}")
     return avg_loss
 
-
-# Running the Classical LSTM
-learning_rate = 0.0001
-num_hidden_units = 16
-
-model = ShallowRegressionLSTM(num_sensors=len(features), hidden_units=num_hidden_units)
-loss_function = nn.MSELoss()
-optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-
-
-classical_loss_train = []
-classical_loss_test = []
-print("Untrained test\n--------")
-test_loss = test_model(test_loader, model, loss_function)
-print()
-classical_loss_test.append(test_loss)
-
-for ix_epoch in range(20):
-    print(f"Epoch {ix_epoch}\n---------")
-    train_loss = train_model(train_loader, model, loss_function, optimizer=optimizer)
+# Try to load the model from disk if it exists
+if os.path.exists('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt'):
+    # FIXME: does not load model: ERROR: AttributeError: 'collections.OrderedDict' object has no attribute 'eval'
+    model.load_state_dict(torch.load('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt'))
+    model.eval()
+else:
+    # Running the Classical LSTM
+    loss_function = nn.MSELoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    
+    classical_loss_train = []
+    classical_loss_test = []
+    print("Untrained test\n--------")
     test_loss = test_model(test_loader, model, loss_function)
     print()
-    classical_loss_train.append(train_loss)
     classical_loss_test.append(test_loss)
+
+    for ix_epoch in range(6):
+        print(f"Epoch {ix_epoch}\n---------")
+        train_loss = train_model(train_loader, model, loss_function, optimizer=optimizer)
+        test_loss = test_model(test_loader, model, loss_function)
+        print()
+        classical_loss_train.append(train_loss)
+        classical_loss_test.append(test_loss)
+
+    # Save model
+    saved_model = model
+    torch.save(model.state_dict(), "C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt")
+
 
 # Predict
 def predict(data_loader, model):
