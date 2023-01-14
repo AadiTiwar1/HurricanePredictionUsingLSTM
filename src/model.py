@@ -107,10 +107,10 @@ for c in df_train.columns:
 # Finally, the last step in the data processing to prepare for LSTM is to prepare the data in a sequence of past observations. Preparation of the LSTM on time series data means that it uses a certain number of past observations to predict the future. In this case, the sequence length decides how many days the LSTM considers in advance. If the sequence length is $n$, then the LSTM considers the last $n$ observations to predict the $n+1$th day.
 # We decided the sequence length as 3 for purposes of this notebook.
 
-torch.manual_seed(101)
+torch.manual_seed(345089723)
 
 batch_size = 1
-sequence_length = 3
+sequence_length = 6
 
 train_dataset = SequenceDataset(
     df_train,
@@ -216,3 +216,5 @@ df_out = pd.concat((df_train, df_test))[[target, ystar_col]]
 
 for c in df_out.columns:
     df_out[c] = df_out[c] * target_stdev + target_mean
+
+accuracy = (1 - (np.sum(np.absolute(model.df_out["next_windspeed"] - model.df_out["Model Forecast"])) / np.sum(model.df_out["next_windspeed"]))) * 100

@@ -32,9 +32,7 @@ with st.spinner(('Loading Model...' if MODEL_TRAINED_STATE is True else 'Trainin
     import src.model as model
 
     # calculate the accuracy of the model
-    accuracy = (1 - (np.sum(np.absolute(model.df_out["windspeed"] - model.df_out["Model Forecast"])) / np.sum(model.df_out["windspeed"]))) * 100
-
-    st.code(f'Model Accuracy: {accuracy}%', language='text')
+    st.code(f'Model Accuracy: {model.accuracy}%', language='text')
 
     # create the graphs
     chart_data_windspeed = pd.DataFrame(
