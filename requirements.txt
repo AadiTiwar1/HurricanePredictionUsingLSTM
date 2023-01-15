@@ -3,3 +3,4 @@ utils===1.0.1
 numpy===1.23.3
 matplotlib===3.5.3
 torch===1.13.1
+streamlit===1.17.0
