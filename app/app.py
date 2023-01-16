@@ -96,14 +96,14 @@ if load_model_btn or st.session_state.loaded:
         #### Latitude
         The latitude of the hurricane. Format: -90.0 (S) to +90.0 (N)
     """, unsafe_allow_html = True)
-    input_lat = st.number_input('Enter a value', min_value=-90.0, max_value=90.0, value=0.0, step=0.1, help="The latitude of the hurricane. Format: -90 (S) to +90 (N)", format="%.1f", key="lat")
+    input_lat = st.slider('Select a value', min_value=-90.0, max_value=90.0, value=0.0, step=0.1, help="The latitude of the hurricane. Format: -90 (S) to +90 (N)", format="%.1f", key="lat")
 
     # LONGITUDE
     st.markdown("""
         #### Longitude
         The longitude of the hurricane. Format: -180.0 (W) to +180.0 (E)
     """, unsafe_allow_html = True)
-    input_long = st.number_input('Enter a value', min_value=-180.0, max_value=180.0, value=0.0, step=0.1, help="The longitude of the hurricane. Format: -180 (W) to +180 (E)", format="%.1f", key="long")
+    input_long = st.slider('Select a value', min_value=-180.0, max_value=180.0, value=0.0, step=0.1, help="The longitude of the hurricane. Format: -180 (W) to +180 (E)", format="%.1f", key="long")
 
     # CENTRAL PRESSURE
     st.markdown("""
@@ -121,7 +121,7 @@ if load_model_btn or st.session_state.loaded:
         Category 4 - Extreme: 920 - 944 millibars <br/>
         Category 5 - Catastrophic: < 920 millibars <br/>
     """, unsafe_allow_html = True)
-    input_central_pressure = st.number_input('Enter a value in millibars', min_value=0.0, max_value=1400.0, value=1000.0, step=0.1, help="Central Pressure of the hurricane. Units in millibars.", key="central_pressure", format="%.1f")
+    input_central_pressure = st.slider('Select a value in millibars', min_value=0.0, max_value=1500.0, value=1013.2, step=0.1, help="Central Pressure of the hurricane. Units in millibars.", key="central_pressure", format="%.1f")
 
     # CENTRAL PRESSURE
     st.markdown("""
@@ -134,7 +134,7 @@ if load_model_btn or st.session_state.loaded:
         Category 4 - Extreme: 113 - 135 kt <br/>
         Category 5 - Catastrophic: > 135 kt <br/>
     """, unsafe_allow_html = True)
-    input_max_sustained_wind = st.number_input('Enter a value in knots', min_value=0.0, max_value=200.0, value=0.0, step=0.1, help="The maximum sustained wind speed of the hurricane. Units in knots.", key="max_sustained_wind", format="%.1f")
+    input_max_sustained_wind = st.slider('Select a value in knots', min_value=0.0, max_value=200.0, value=0.0, step=0.1, help="The maximum sustained wind speed of the hurricane. Units in knots.", key="max_sustained_wind", format="%.1f")
 
     # SUBMIT BUTTON
     st.button("Predict", key="submit", on_click=temp_predict_fn, args=(input_date, input_lat, input_long, input_central_pressure, input_max_sustained_wind))
