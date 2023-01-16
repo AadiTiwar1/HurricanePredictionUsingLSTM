@@ -22,7 +22,7 @@ st.markdown(
         and then test it on the test dataset. The learning rate was
         decided after some experimentation, where we chose the learning rate 
         that gave accurate results. The number of epochs we use is 6, by which 
-        the model converges. After that, we visualize three different graphs: the 
+        the model converges. After that, we visualize two different graphs: the 
         comparison between the real hurricane data and the ones given by the 
         model.
     """
