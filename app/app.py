@@ -7,9 +7,9 @@ import datetime
 
 MODEL_TRAINED_STATE = os.path.exists('src/hurricane_model.pt')
 
-# add images of the prediction graph and the loss function graphs (put them in static/images folder)
-# connect to model in src/model.py and run the predict function when the user submits their values to predict on
-# add fields in the streamlit app to ask the user to submit values
+@st.cache
+def convert_df(df: pd.DataFrame):
+    return df.to_csv().encode('utf-8')
 
 # Explanation of the app
 st.title("Hurricane Prediction")
@@ -39,6 +39,13 @@ load_model_btn = st.button("Load Model" if MODEL_TRAINED_STATE else "Train Model
 if 'loaded' not in st.session_state:
     st.session_state.loaded = False
 
+st.download_button(
+    label="Download Historical Data (.csv)",
+    data=convert_df(pd.read_csv('static/dataset/atlantic.csv')),
+    file_name='atlantic.csv',
+    mime='text/csv',
+)
+
 if load_model_btn or st.session_state.loaded:
     with st.spinner(('Loading Model...' if MODEL_TRAINED_STATE is True else 'Training Model...')):
         import src.model as model
@@ -46,6 +53,7 @@ if load_model_btn or st.session_state.loaded:
         st.code(f'Model Accuracy: {model.accuracy}%', language='ruby')
 
         # create the graphs of the data and predicted data
+        # TODO: add a slider to choose the range of data to show for all graphs
         chart_data_windspeed = pd.DataFrame(
             model.df_out,
             columns = ["next_windspeed"]
@@ -56,17 +64,28 @@ if load_model_btn or st.session_state.loaded:
             columns = ["Model Forecast"]
         )
 
+        chart_data_overlap = pd.DataFrame(
+            model.df_out,
+            columns = ["next_windspeed", "Model Forecast"]
+        )
+
         st.header("Historical Data")
-        show_historical_data = st.checkbox("Show/Hide Historical Data")
+        show_historical_data = st.checkbox("Show/Hide Historical Data Graph")
         if show_historical_data:
-            st.error("Uncheck the checkbox above if you don't need to see the historical data anymore as it may slow down the app.", icon="⚠")
+            st.error("Uncheck the checkbox above if you don't need to see the historical data anymore as it may slow down the app.")
             st.line_chart(chart_data_windspeed)
 
         st.header("Predicted Data")
-        show_predicted_data = st.checkbox("Show/Hide Predicted Data")
+        show_predicted_data = st.checkbox("Show/Hide Predicted Data Graph")
         if show_predicted_data:
-            st.error("Uncheck the checkbox above if you don't need to see the predicted data anymore as it may slow down the app.", icon="⚠")
+            st.error("Uncheck the checkbox above if you don't need to see the predicted data anymore as it may slow down the app.")
             st.line_chart(chart_data_predict)
+
+        st.header("Data Overlap")
+        show_predicted_data = st.checkbox("Show/Hide Overlapped Data Graph")
+        if show_predicted_data:
+            st.error("Uncheck the checkbox above if you don't need to see the overlapped data anymore as it may slow down the app.")
+            st.line_chart(chart_data_overlap)
         # TODO: create a vertical line to show where the test set starts
 
         # ************************************************************************************************** #
@@ -137,7 +156,7 @@ if load_model_btn or st.session_state.loaded:
     input_max_sustained_wind = st.slider('Select a value in knots', min_value=0.0, max_value=200.0, value=0.0, step=0.1, help="The maximum sustained wind speed of the hurricane. Units in knots.", key="max_sustained_wind", format="%.1f")
 
     # SUBMIT BUTTON
-    st.button("Predict", key="submit", on_click=temp_predict_fn, args=(input_date, input_lat, input_long, input_central_pressure, input_max_sustained_wind))
+    st.button("Predict", key="submit", on_click=temp_predict_fn, args=(input_date, input_lat, input_long, input_central_pressure, input_max_sustained_wind), )
 
 
 
