@@ -58,7 +58,7 @@ class ShallowRegressionLSTM(nn.Module):
         return out
     
 # First, we read in the data, dropping the index and the date.
-df = pd.read_csv('static/dataset/atlantic (2).csv')
+df = pd.read_csv('static/dataset/atlantic.csv')
 
 df.drop(['status_of_system', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8','Unnamed: 9', 
         'Unnamed: 10', 'Unnamed: 11','Unnamed: 12', 'Unnamed: 13', 'Unnamed: 14', 
