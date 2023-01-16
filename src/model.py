@@ -71,6 +71,7 @@ df['date'] = df['date'].apply(lambda x: float(x.split()[0].replace('-', '')))
 df['latitude'] = df['latitude'].map(lambda x: float(x.rstrip('NEWS')))
 df['longitude'] = df['longitude'].map(lambda x: float(x.rstrip('NEWS')))
 df['max_sustained_wind'] = df['max_sustained_wind'].replace(-99, np.nan)
+df['next_windspeed'] = df['next_windspeed'].replace(-99, np.nan)
 
 df['max_sustained_wind'] =  df['max_sustained_wind'].fillna(method='ffill', limit=1000)
 df['max_sustained_wind'] =  df['max_sustained_wind'].fillna(method='bfill', limit=1000)
@@ -167,8 +168,8 @@ def test_model(data_loader, model, loss_function):
     return avg_loss
 
 # Try to load the model from disk if it exists
-if os.path.exists('hurricane_model.pt'):
-    model.load_state_dict(torch.load('hurricane_model.pt'))
+if os.path.exists('src/hurricane_model.pt'):
+    model.load_state_dict(torch.load('src/hurricane_model.pt'))
     model.eval()
 else:
     # Running the Classical LSTM
@@ -217,4 +218,4 @@ df_out = pd.concat((df_train, df_test))[[target, ystar_col]]
 for c in df_out.columns:
     df_out[c] = df_out[c] * target_stdev + target_mean
 
-accuracy = (1 - (np.sum(np.absolute(model.df_out["next_windspeed"] - model.df_out["Model Forecast"])) / np.sum(model.df_out["next_windspeed"]))) * 100
+accuracy = (1 - (np.sum(np.absolute(df_out["next_windspeed"] - df_out["Model Forecast"])) / np.sum(df_out["next_windspeed"]))) * 100
