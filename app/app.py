@@ -50,23 +50,8 @@ with st.spinner(('Loading Model...' if MODEL_TRAINED_STATE is True else 'Trainin
     st.header("Predicted Data")
     st.line_chart(chart_data_predict)
 
-    # ********************************************* #
-    #? maybe try using matplotlib to plot the graph??
-    # fig = plt.figure(figsize=(12, 7))
-    # plt.plot(range(len(model.df_out)), model.df_out["windspeed"], label = "Real")
-    # plt.plot(range(len(model.df_out)), model.df_out["Model Forecast"], label = "LSTM Prediction")
-    # plt.ylabel('Wind Speed')
-    # plt.xlabel('Days')
-    # plt.vlines(model.size, ymin=0, ymax=100, label = "Test set start", linestyles = "dashed")
-    # plt.legend()
-    # st.pyplot(fig)
-    # ********************************************* #
+    
 
-    # TODO: features = ['central_pressure', 'latitude', 'longitude', 'max_sustained_wind'] => create inputs and a form to ask the user to input values
+    
 
 
-# Section 3 is where the user can make predictions
-
-# **** FOR REFERENCE ****
-# ? GH LINK: https://github.com/cloudera/CML_AMP_Intelligent_Writing_Assistance
-# ? Streamlit Docs: https://docs.streamlit.io/en/stable/
