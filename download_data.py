@@ -1,5 +1,0 @@
-import csv
-import requests
-with requests.Session() as s:
-    s.post(url, data=payload)
-    download = s.get('https://storage.googleapis.com/kaggle-data-sets/692/1307/compressed/atlantic.csv.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=gcp-kaggle-com%40kaggle-161607.iam.gserviceaccount.com%2F20230111%2Fauto%2Fstorage%2Fgoog4_request&X-Goog-Date=20230111T053656Z&X-Goog-Expires=259200&X-Goog-SignedHeaders=host&X-Goog-Signature=d9ad0300459effb17ef0fa7acddd04e8e2867e8faff4dcedc667012e2fd3fc601dcb81fe17b0b0fa8c62f020abdddd9240ee5135d10096bb2a72a9d2028fb3c09af7298da2beef3058380984819abaf9b1d377e3f9dc7c068845fa02afe6cd047f25451a84a32071a05987f0749a187e92da7376bbb733e662bd9a800a40a998546a5bb77d4c30d542bcc41f6b2f619fb1ba0cac795172239dd24ee7c9aed82e7cebf00da3a4d33f4f2c453fd204f50d0a42278eef8d2730bba693cc4a3ff6f0d6cd65fb4b023eacb3dbfe5392a2709e1527c8b73414ce741cb474637591b7b91c9cb373b171699616c1d58c1e1315fea8f9fa250340e47a06010348a837020e')

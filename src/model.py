@@ -58,7 +58,7 @@ class ShallowRegressionLSTM(nn.Module):
         return out
     
 # First, we read in the data, dropping the index and the date.
-df = pd.read_csv('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/static/dataset/atlantic (2).csv')
+df = pd.read_csv('static/dataset/atlantic (2).csv')
 
 df.drop(['status_of_system', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8','Unnamed: 9', 
         'Unnamed: 10', 'Unnamed: 11','Unnamed: 12', 'Unnamed: 13', 'Unnamed: 14', 
@@ -167,8 +167,8 @@ def test_model(data_loader, model, loss_function):
     return avg_loss
 
 # Try to load the model from disk if it exists
-if os.path.exists('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt'):
-    model.load_state_dict(torch.load('C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt'))
+if os.path.exists('hurricane_model.pt'):
+    model.load_state_dict(torch.load('hurricane_model.pt'))
     model.eval()
 else:
     # Running the Classical LSTM
@@ -189,7 +189,7 @@ else:
         classical_loss_test.append(test_loss)
 
     # Save model
-    torch.save(model.state_dict(), "C:/Users/Aarus/Documents/code/HurricanePredictionUsingLSTM/src/hurricane_model.pt")
+    torch.save(model.state_dict(), "hurricane_model.pt")
 
 
 # Predict
