@@ -4,59 +4,7 @@ import numpy as np
 import pandas as pd
 import os
 import datetime
-from torch.utils.data import DataLoader
-import torch
-from torch.utils.data import Dataset
 
-def predict_from_inputs(date, lat, long, central_pressure, max_sustained_wind):
-    print(0, lat, long, central_pressure, max_sustained_wind)
-    df_predict = pd.DataFrame({
-        "date": [0],
-        "latitude": [0],
-        "longitude": [0],
-        "central_pressure": [0],
-        "max_sustained_wind": [0],
-        "next_windspeed": [0]
-    })
-
-    # for c in df_predict.columns:
-    #     df_predict[c] = (df_predict[c] - model.mean) / model.stdev
-
-    predict_dataset = SequenceDataset(
-        df_predict,
-        target=model.target,
-        features=model.features,
-        sequence_length=model.sequence_length
-    )
-    predict_data_loader = DataLoader(predict_dataset, batch_size=model.batch_size, shuffle=False)
-    prediction = model.predict(predict_data_loader, model.model).numpy()
-
-    prediction = prediction * model.target_stdev + model.target_mean
-    print(prediction)
-
-    return prediction
-    
-class SequenceDataset(Dataset):
-    def __init__(self, dataframe, target, features, sequence_length=5):
-        self.features = features
-        self.target = target
-        self.sequence_length = sequence_length
-        self.y = torch.tensor(dataframe[self.target].values).float()
-        self.X = torch.tensor(dataframe[self.features].values).float()
-
-    def __len__(self):
-        return self.X.shape[0]
-
-    def __getitem__(self, i): 
-        if i >= self.sequence_length - 1:
-            i_start = i - self.sequence_length + 1
-            x = self.X[i_start:(i + 1), :]
-        else:
-            padding = self.X[0].repeat(self.sequence_length - i - 1, 1)
-            x = self.X[0:(i + 1), :]
-            x = torch.cat((padding, x), 0)
-
-        return x, self.y[i]
 
 MODEL_TRAINED_STATE = os.path.exists('src/hurricane_model.pt')
 
@@ -205,8 +153,14 @@ if load_model_btn or st.session_state.loaded:
     """, unsafe_allow_html = True)
     input_max_sustained_wind = st.slider('Select a value in knots', min_value=0.0, max_value=200.0, value=0.0, step=0.1, help="The maximum sustained wind speed of the hurricane. Units in knots.", key="max_sustained_wind", format="%.1f")
 
-    # SUBMIT BUTTON
-    st.button("Predict", key="submit", args=(input_date, input_lat, input_long, input_central_pressure, input_max_sustained_wind), on_click=predict_from_inputs)
+    # SUBMIT BUTTON AND FUNCTION
+    if "prediction" not in st.session_state:
+        st.session_state.prediction = None
+        
+    def on_submit():
+        st.session_state.prediction = model.predict_from_inputs(input_date, input_lat, input_long, input_central_pressure, input_max_sustained_wind)
+
+    st.button("Predict", key="submit", on_click=on_submit)
 
     #* Section 4 is where the user can see the prediction
     st.header("Prediction")
@@ -224,7 +178,7 @@ if load_model_btn or st.session_state.loaded:
         kt...
     """, unsafe_allow_html = True)
     
-    # st.code(f"Prediction: {prediction}", language="python")
+    st.code(f"Prediction: {st.session_state.prediction}", language="python")
 
 
 # **** FOR REFERENCE ****

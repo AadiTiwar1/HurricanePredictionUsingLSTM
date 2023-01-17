@@ -58,14 +58,15 @@ class ShallowRegressionLSTM(nn.Module):
         return out
     
 # First, we read in the data, dropping the index and the date.
-df = pd.read_csv('static/dataset/atlantic.csv')
+df = pd.read_csv('static/dataset/atlantic.csv', sep=',', index_col=False)
 
-df.drop(['status_of_system', 'Unnamed: 6', 'Unnamed: 7', 'Unnamed: 8','Unnamed: 9', 
-        'Unnamed: 10', 'Unnamed: 11','Unnamed: 12', 'Unnamed: 13', 'Unnamed: 14', 
-        'Unnamed: 15', 'Unnamed: 16', 'Unnamed: 17', 'Unnamed: 18'], inplace=True, axis=1)
+df.drop(["basin", "name", "year", "cyclone_of_the_year", "num_of_track_entries",
+"time", "record_identifier", "status_of_system", "34kt_NE",
+"34kt_SE","34kt_SW","34kt_NW","50kt_NE","50kt_SE","50kt_SW",
+"50kt_NW","64kt_NE","64kt_SE","64kt_SW","64kt_NW"], inplace=True, axis=1)
+
+
 df['date'] = pd.to_datetime(df['date'], format = "%Y%m%d").dt.strftime('%Y-%m-%d')
-
-
 df['next_windspeed'] =  df['max_sustained_wind'].shift(-1)
 df['date'] = df['date'].apply(lambda x: float(x.split()[0].replace('-', '')))
 df['latitude'] = df['latitude'].map(lambda x: float(x.rstrip('NEWS')))
@@ -219,3 +220,28 @@ for c in df_out.columns:
     df_out[c] = df_out[c] * target_stdev + target_mean
 
 accuracy = (1 - (np.sum(np.absolute(df_out["next_windspeed"] - df_out["Model Forecast"])) / np.sum(df_out["next_windspeed"]))) * 100
+
+# predict function for frontend values
+def predict_from_inputs(date, latitude, longitude, central_pressure, max_sustained_wind):
+    print(date, latitude, longitude, central_pressure, max_sustained_wind)
+    df_predict = pd.DataFrame({
+        "date": [18510625],
+        "latitude": [int(latitude)],
+        "longitude": [int(longitude)],
+        "central_pressure": [int(central_pressure)],
+        "max_sustained_wind": [int(max_sustained_wind)],
+        "next_windspeed": [int(max_sustained_wind)]
+    })
+
+    predict_dataset = SequenceDataset(
+        df_predict,
+        target=target,
+        features=features,
+        sequence_length=sequence_length
+    )
+    predict_data_loader = DataLoader(predict_dataset, batch_size=batch_size, shuffle=False)
+    prediction = predict(predict_data_loader, model).numpy()
+
+    prediction = prediction * target_stdev + target_mean
+
+    return prediction
