@@ -83,7 +83,7 @@ df['next_windspeed'] = df['next_windspeed'].fillna(method='bfill', limit=1000)
 
 
 target = "next_windspeed"
-features = list(df.columns.difference(['next_windspeed']))
+features = list(df.columns.difference(['next_windspeed', 'date']))
 
 
 # Data Processing
@@ -191,7 +191,7 @@ else:
         classical_loss_test.append(test_loss)
 
     # Save model
-    torch.save(model.state_dict(), "hurricane_model.pt")
+    torch.save(model.state_dict(), "src/hurricane_model.pt")
 
 
 # Predict
@@ -225,7 +225,7 @@ accuracy = (1 - (np.sum(np.absolute(df_out["next_windspeed"] - df_out["Model For
 def predict_from_inputs(date, latitude, longitude, central_pressure, max_sustained_wind):
     print(date, latitude, longitude, central_pressure, max_sustained_wind)
     df_predict = pd.DataFrame({
-        "date": [18510625],
+        # "date": [int(date))],
         "latitude": [int(latitude)],
         "longitude": [int(longitude)],
         "central_pressure": [int(central_pressure)],
