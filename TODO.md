@@ -19,5 +19,3 @@
 `static/dataset/atlantic.csv` - figure out how to drop columns and clean up the file AFTER downloading with download_data.py
 
 `src/model.py` - figure out how to create a prediction method that takes in inputs from the frontend `app/app.py` and makes a prediction that can be displayed in the frontend
-
-`app/app.py` create form and inputs for frontend
