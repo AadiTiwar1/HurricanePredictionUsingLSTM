@@ -7,33 +7,23 @@ This repo provides scripts and examples that can help you predict hurricanes on 
 
 ```├── app/
 
-
 ├── scripts/
-
 
 │   ├── download_data.py
 
-
 │   ├── install_dependencies.py
-
 
 │   ├── train_model.py
 
-
 │   └── launch_app.py
-
 
 ├── src/    
 
-
 ├── static/dataset
-
 
 ├── .project-metadata.yaml
 
-
 ├── README.md
-
 
 └── requirements.txt```
 
