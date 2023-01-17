@@ -5,7 +5,7 @@ Hurricanes remain as one of the deadliest natural disaster on the planet. Utiliz
 # Instructions
 This repo provides scripts and examples that can help you predict hurricanes on your own computer. The repo also provides a [Jupyter Notebook](https://github.com/AadiTiwar1/HurricanePredictionUsingLSTM/blob/main/src/HurricanePredictionDraft1%20(3).ipynb)) notebook which contains all of the code in one place with text descriptions for the easisest learning experience. [Note: We highly reccomend just downloading the Jupyter Notebook and running that instead of downloading the entire project and running the files!] For a more file-seperated based version, our Repo structure and brief description of content is provided below:
 
-├── app/
+`├── app/
 
 
 ├── scripts/
@@ -35,7 +35,7 @@ This repo provides scripts and examples that can help you predict hurricanes on 
 ├── README.md
 
 
-└── requirements.txt
+└── requirements.txt`
 
 
 The following scripts are recommended as a starting point:
