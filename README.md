@@ -19,6 +19,6 @@ This repo provides scripts and examples that can help you predict hurricanes on 
 The following scripts are recommended as a starting point:
 
 Install dependencies
-`pip3 install -r requirements.txt`
+``pip3 install -r requirements.txt``
 This repo depends on a few libraries (e.g. PyTorch) that need to be installed on the latest version.
 
