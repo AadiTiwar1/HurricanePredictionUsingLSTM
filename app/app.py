@@ -107,8 +107,7 @@ if load_model_btn or st.session_state.loaded:
         #### Date
         The date of the hurricane. Format: YYYYMMDD
     """, unsafe_allow_html = True)
-    current_date = int(datetime.datetime.now().strftime("%Y%m%d"))
-    input_date = st.number_input('Enter a value', min_value=0, value=current_date, step=1, help="Date of the hurricane. Format: YYYYMMDD", format="%d", key="date")
+    input_date = st.date_input('Enter a value', datetime.date.today(), help="Date of the hurricane. Format: YYYYMMDD", key="date").strftime("%Y%m%d")
 
     # LATITUDE
     st.markdown("""
