@@ -21,3 +21,5 @@
 `src/model.py` - figure out how to create a prediction method that takes in inputs from the frontend `app/app.py` and makes a prediction that can be displayed in the frontend
 
 train_model.py
+
+copy classes to model.py and notebook so no importing is necessary
