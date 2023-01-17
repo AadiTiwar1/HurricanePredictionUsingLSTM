@@ -178,7 +178,8 @@ if load_model_btn or st.session_state.loaded:
         kt...
     """, unsafe_allow_html = True)
     
-    st.code(f"Prediction: {st.session_state.prediction}", language="python")
+    if st.session_state.prediction is not None:
+        st.code(f"Prediction: {st.session_state.prediction[0]} knots ({st.session_state.prediction[0] * 1.151} mph)", language="python")
 
 
 # **** FOR REFERENCE ****

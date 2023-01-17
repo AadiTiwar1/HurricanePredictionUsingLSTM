@@ -6,71 +6,30 @@ from torch.utils.data import DataLoader
 from torch import nn
 import torch
 from torch import nn
-from torch.utils.data import Dataset
 import os
+from src.utils.Factory import SequenceDataset, ShallowRegressionLSTM
 
-class SequenceDataset(Dataset):
-    def __init__(self, dataframe, target, features, sequence_length=5):
-        self.features = features
-        self.target = target
-        self.sequence_length = sequence_length
-        self.y = torch.tensor(dataframe[self.target].values).float()
-        self.X = torch.tensor(dataframe[self.features].values).float()
+def convert_lat_long(value):
+    if value[-1] == 'S' or value[-1] == 'W':
+        return -1 * float(value[:-1])
+    else:
+        return float(value[:-1])
 
-    def __len__(self):
-        return self.X.shape[0]
-
-    def __getitem__(self, i): 
-        if i >= self.sequence_length - 1:
-            i_start = i - self.sequence_length + 1
-            x = self.X[i_start:(i + 1), :]
-        else:
-            padding = self.X[0].repeat(self.sequence_length - i - 1, 1)
-            x = self.X[0:(i + 1), :]
-            x = torch.cat((padding, x), 0)
-
-        return x, self.y[i]
-
-class ShallowRegressionLSTM(nn.Module):
-    def __init__(self, num_sensors, hidden_units):
-        super(ShallowRegressionLSTM, self).__init__()
-        self.num_sensors = num_sensors  # this is the number of features
-        self.hidden_units = hidden_units
-        self.num_layers = 1
-
-        self.lstm = nn.LSTM(
-            input_size=num_sensors,
-            hidden_size=hidden_units,
-            batch_first=True,
-            num_layers=self.num_layers
-        )
-
-        self.linear = nn.Linear(in_features=self.hidden_units, out_features=1)
-
-    def forward(self, x):
-        batch_size = x.shape[0]
-        h0 = torch.zeros(self.num_layers, batch_size, self.hidden_units).requires_grad_()
-        c0 = torch.zeros(self.num_layers, batch_size, self.hidden_units).requires_grad_()
-        
-        _, (hn, _) = self.lstm(x, (h0, c0))
-        out = self.linear(hn[0]).flatten()  # First dim of Hn is num_layers, which is set to 1 above.
-
-        return out
-    
 # First, we read in the data, dropping the index and the date.
 df = pd.read_csv('static/dataset/atlantic.csv', sep=',', index_col=False)
 
 df.drop(["basin", "name", "year", "cyclone_of_the_year", "num_of_track_entries",
-"time", "record_identifier", "status_of_system", "34kt_NE",
-"34kt_SE","34kt_SW","34kt_NW","50kt_NE","50kt_SE","50kt_SW",
-"50kt_NW","64kt_NE","64kt_SE","64kt_SW","64kt_NW"], inplace=True, axis=1)
-
+    "time", "record_identifier", "status_of_system", "34kt_NE",
+    "34kt_SE","34kt_SW","34kt_NW","50kt_NE","50kt_SE","50kt_SW",
+    "50kt_NW","64kt_NE","64kt_SE","64kt_SW","64kt_NW"], inplace=True, axis=1)
 
 df['date'] = pd.to_datetime(df['date'], format = "%Y%m%d").dt.strftime('%Y-%m-%d')
 df['next_windspeed'] =  df['max_sustained_wind'].shift(-1)
 df['date'] = df['date'].apply(lambda x: float(x.split()[0].replace('-', '')))
-df['latitude'] = df['latitude'].map(lambda x: float(x.rstrip('NEWS')))
-df['longitude'] = df['longitude'].map(lambda x: float(x.rstrip('NEWS')))
+
+df['latitude'] = df['latitude'].map(lambda x: convert_lat_long(x))
+df['longitude'] = df['longitude'].map(lambda x: convert_lat_long(x))
+
 df['max_sustained_wind'] = df['max_sustained_wind'].replace(-99, np.nan)
 df['next_windspeed'] = df['next_windspeed'].replace(-99, np.nan)
 
@@ -83,7 +42,7 @@ df['next_windspeed'] = df['next_windspeed'].fillna(method='bfill', limit=1000)
 
 
 target = "next_windspeed"
-features = list(df.columns.difference(['next_windspeed', 'date']))
+features = list(df.columns.difference(['next_windspeed']))
 
 
 # Data Processing
