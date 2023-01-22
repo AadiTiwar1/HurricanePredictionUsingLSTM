@@ -109,74 +109,75 @@ if load_model_btn or st.session_state.loaded:
     input_date = input_date_unformatted.strftime("%Y%m%d")
 
     # LATITUDE
-    st.markdown("""
-        #### Latitude
-        The latitude of the hurricane. Format: -90.0 (S) to +90.0 (N)
-    """, unsafe_allow_html = True)
-    input_lat = st.slider('Select a value', min_value=-90.0, max_value=90.0, value=0.0, step=0.1, help="The latitude of the hurricane. Format: -90 (S) to +90 (N)", format="%.1f", key="lat")
+    # st.markdown("""
+    #     #### Latitude
+    #     The latitude of the hurricane. Format: -90.0 (S) to +90.0 (N)
+    # """, unsafe_allow_html = True)
+    #input_lat = st.slider('Select a value', min_value=-90.0, max_value=90.0, value=0.0, step=0.1, help="The latitude of the hurricane. Format: -90 (S) to +90 (N)", format="%.1f", key="lat")
 
     # LONGITUDE
-    st.markdown("""
-        #### Longitude
-        The longitude of the hurricane. Format: -180.0 (W) to +180.0 (E)
-    """, unsafe_allow_html = True)
-    input_long = st.slider('Select a value', min_value=-180.0, max_value=180.0, value=0.0, step=0.1, help="The longitude of the hurricane. Format: -180 (W) to +180 (E)", format="%.1f", key="long")
+    # st.markdown("""
+    #     #### Longitude
+    #     The longitude of the hurricane. Format: -180.0 (W) to +180.0 (E)
+    # """, unsafe_allow_html = True)
+    #input_long = st.slider('Select a value', min_value=-180.0, max_value=180.0, value=0.0, step=0.1, help="The longitude of the hurricane. Format: -180 (W) to +180 (E)", format="%.1f", key="long")
 
     # CENTRAL PRESSURE
-    st.markdown("""
-        #### Central Pressure
-        At sea level, standard air pressure in millibars is
-        <b style="font-weight: bolder; color: teal;">1013.2</b>
-        (weather.gov).
+    # st.markdown("""
+    #     #### Central Pressure
+    #     At sea level, standard air pressure in millibars is
+    #     <b style="font-weight: bolder; color: teal;">1013.2</b>
+    #     (weather.gov).
 
-        The lower the pressure, the more severe the hurricane. Normally, during a hurricane, 
-        the pressure is between 900 and 1000.
+    #     The lower the pressure, the more severe the hurricane. Normally, during a hurricane, 
+    #     the pressure is between 900 and 1000.
 
-        Category 1 - Minimal: > 980 millibars <br/>
-        Category 2 - Moderate: 965 - 979 millibars <br/>
-        Category 3 - Extensive: 945 - 964 millibars <br/>
-        Category 4 - Extreme: 920 - 944 millibars <br/>
-        Category 5 - Catastrophic: < 920 millibars <br/>
-    """, unsafe_allow_html = True)
-    input_central_pressure = st.slider('Select a value in millibars', min_value=0.0, max_value=1500.0, value=1013.2, step=0.1, help="Central Pressure of the hurricane. Units in millibars.", key="central_pressure", format="%.1f")
+    #     Category 1 - Minimal: > 980 millibars <br/>
+    #     Category 2 - Moderate: 965 - 979 millibars <br/>
+    #     Category 3 - Extensive: 945 - 964 millibars <br/>
+    #     Category 4 - Extreme: 920 - 944 millibars <br/>
+    #     Category 5 - Catastrophic: < 920 millibars <br/>
+    # """, unsafe_allow_html = True)
+    #input_central_pressure = st.slider('Select a value in millibars', min_value=0.0, max_value=1500.0, value=1013.2, step=0.1, help="Central Pressure of the hurricane. Units in millibars.", key="central_pressure", format="%.1f")
 
     # CENTRAL PRESSURE
-    st.markdown("""
-        #### Maximum Sustained Wind Speed
-        The maximum sustained wind speed of the hurricane. Units in knots.
+    # st.markdown("""
+    #     #### Maximum Sustained Wind Speed
+    #     The maximum sustained wind speed of the hurricane. Units in knots.
 
-        Category 1 - Minimal: 64 - 83 kt <br/>
-        Category 2 - Moderate: 83 - 96 kt <br/>
-        Category 3 - Extensive: 96 - 113 kt <br/>
-        Category 4 - Extreme: 113 - 135 kt <br/>
-        Category 5 - Catastrophic: > 135 kt <br/>
-    """, unsafe_allow_html = True)
-    input_max_sustained_wind = st.slider('Select a value in knots', min_value=0.0, max_value=200.0, value=0.0, step=0.1, help="The maximum sustained wind speed of the hurricane. Units in knots.", key="max_sustained_wind", format="%.1f")
+    #     Category 1 - Minimal: 64 - 83 kt <br/>
+    #     Category 2 - Moderate: 83 - 96 kt <br/>
+    #     Category 3 - Extensive: 96 - 113 kt <br/>
+    #     Category 4 - Extreme: 113 - 135 kt <br/>
+    #     Category 5 - Catastrophic: > 135 kt <br/>
+    # """, unsafe_allow_html = True)
+    #input_max_sustained_wind = st.slider('Select a value in knots', min_value=0.0, max_value=200.0, value=0.0, step=0.1, help="The maximum sustained wind speed of the hurricane. Units in knots.", key="max_sustained_wind", format="%.1f")
 
     # SUBMIT BUTTON AND FUNCTION
     if "prediction" not in st.session_state:
         st.session_state.prediction = None
         
     def on_submit():
-        st.session_state.prediction = model.predict_from_inputs(input_date, input_lat, input_long, input_central_pressure, input_max_sustained_wind)
+        st.session_state.prediction = model.predict_from_inputs(input_date)
+      #  , input_lat, input_long, input_central_pressure, input_max_sustained_wind)
 
     st.button("Predict", key="submit", on_click=on_submit)
 
     #* Section 4 is where the user can see the prediction
     st.header("Prediction")
-    st.markdown(f"""
+    # st.markdown(f"""
         #### Predicted Wind Speed
-        Predicting for 
-        <b style="color: teal;">{input_date_unformatted}</b> 
-        at 
-        <b style="color: teal;">{input_lat}</b>, 
-        <b style="color: teal;">{input_long}</b>
-        with 
-        <b style="color: teal;">{input_central_pressure}</b>
-        mb and 
-        <b style="color: teal;">{input_max_sustained_wind}</b>
-        kt...
-    """, unsafe_allow_html = True)
+        # Predicting for 
+        # <b style="color: teal;">{input_date_unformatted}</b> 
+        # at 
+        # <b style="color: teal;">{input_lat}</b>, 
+        # <b style="color: teal;">{input_long}</b>
+        # with 
+        # <b style="color: teal;">{input_central_pressure}</b>
+        # mb and 
+        # <b style="color: teal;">{input_max_sustained_wind}</b>
+        # kt...
+    # """, unsafe_allow_html = True)
     
     if st.session_state.prediction is not None:
         st.code(f"Prediction: {st.session_state.prediction[0]} knots ({st.session_state.prediction[0] * 1.151} mph)", language="python")

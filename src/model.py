@@ -181,15 +181,17 @@ for c in df_out.columns:
 accuracy = (1 - (np.sum(np.absolute(df_out["next_windspeed"] - df_out["Model Forecast"])) / np.sum(df_out["next_windspeed"]))) * 100
 
 # predict function for frontend values
-def predict_from_inputs(date, latitude, longitude, central_pressure, max_sustained_wind):
-    print(date, latitude, longitude, central_pressure, max_sustained_wind)
+def predict_from_inputs(date):
+#, latitude, longitude, central_pressure, max_sustained_wind:
+    #print(#date,
+     #latitude, longitude, central_pressure, max_sustained_wind)
     df_predict = pd.DataFrame({
         "date": [int(0)],
-        "latitude": [int(latitude)],
-        "longitude": [int(longitude)],
-        "central_pressure": [int(central_pressure)],
-        "max_sustained_wind": [int(max_sustained_wind)],
-        "next_windspeed": [int(max_sustained_wind)]
+        # "latitude": [int(latitude)],
+        # "longitude": [int(longitude)],
+        # "central_pressure": [int(central_pressure)],
+        # "max_sustained_wind": [int(max_sustained_wind)],
+        # "next_windspeed": [int(max_sustained_wind)]
     })
 
     predict_dataset = SequenceDataset(
