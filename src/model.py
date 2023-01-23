@@ -42,7 +42,7 @@ df['next_windspeed'] = df['next_windspeed'].fillna(method='bfill', limit=1000)
 
 
 target = "next_windspeed"
-features = list(df.columns.difference(['next_windspeed']))
+features = list(df.columns.difference(['next_windspeed', 'date']))
 
 
 # Data Processing
@@ -182,15 +182,17 @@ accuracy = (1 - (np.sum(np.absolute(df_out["next_windspeed"] - df_out["Model For
 
 # predict function for frontend values
 def predict_from_inputs(date, latitude, longitude, central_pressure, max_sustained_wind):
-    print(date, latitude, longitude, central_pressure, max_sustained_wind)
+    # print(date, latitude, longitude, central_pressure, max_sustained_wind)
     df_predict = pd.DataFrame({
-        "date": [int(0)],
+        "date": [int(date)],
         "latitude": [int(latitude)],
         "longitude": [int(longitude)],
         "central_pressure": [int(central_pressure)],
         "max_sustained_wind": [int(max_sustained_wind)],
-        "next_windspeed": [int(max_sustained_wind)]
+        "next_windspeed": [0]
     })
+
+    # print(df_predict)
 
     predict_dataset = SequenceDataset(
         df_predict,
@@ -202,5 +204,8 @@ def predict_from_inputs(date, latitude, longitude, central_pressure, max_sustain
     prediction = predict(predict_data_loader, model).numpy()
 
     prediction = prediction * target_stdev + target_mean
+
+    # print(prediction)
+    # print('--------------------------------------------------------------')
 
     return prediction
