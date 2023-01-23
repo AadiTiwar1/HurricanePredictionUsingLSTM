@@ -23,3 +23,7 @@
 train_model.py
 
 copy classes to model.py and notebook so no importing is necessary
+
+<!-- try to fix model -->
+
+- converting date to unix time
