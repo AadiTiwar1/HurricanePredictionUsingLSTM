@@ -18,21 +18,28 @@ def convert_lat_long(value):
 # First, we read in the data, dropping the index and the date.
 df = pd.read_csv('static/dataset/atlantic.csv', sep=',', index_col=False)
 
+# drop columns that are not needed
 df.drop(["basin", "name", "year", "cyclone_of_the_year", "num_of_track_entries",
     "time", "record_identifier", "status_of_system", "34kt_NE",
     "34kt_SE","34kt_SW","34kt_NW","50kt_NE","50kt_SE","50kt_SW",
     "50kt_NW","64kt_NE","64kt_SE","64kt_SW","64kt_NW"], inplace=True, axis=1)
 
+# parse date to unix
 df['date'] = pd.to_datetime(df['date'], format = "%Y%m%d").dt.strftime('%Y-%m-%d')
-df['next_windspeed'] =  df['max_sustained_wind'].shift(-1)
-df['date'] = df['date'].apply(lambda x: float(x.split()[0].replace('-', '')))
+df['date'] = df['date'].map(lambda x: pd.Timestamp(x).timestamp())
 
+# shift the max_sustained_wind column by 1 to get the next day's windspeed
+df['next_windspeed'] =  df['max_sustained_wind'].shift(-1)
+
+# convert latitude and longitude to float
 df['latitude'] = df['latitude'].map(lambda x: convert_lat_long(x))
 df['longitude'] = df['longitude'].map(lambda x: convert_lat_long(x))
 
+# replace -99 with NaN
 df['max_sustained_wind'] = df['max_sustained_wind'].replace(-99, np.nan)
 df['next_windspeed'] = df['next_windspeed'].replace(-99, np.nan)
 
+# fill in missing values
 df['max_sustained_wind'] =  df['max_sustained_wind'].fillna(method='ffill', limit=1000)
 df['max_sustained_wind'] =  df['max_sustained_wind'].fillna(method='bfill', limit=1000)
 df['central_pressure'] = df['central_pressure'].fillna(method='ffill', limit=1000)
@@ -42,7 +49,7 @@ df['next_windspeed'] = df['next_windspeed'].fillna(method='bfill', limit=1000)
 
 
 target = "next_windspeed"
-features = list(df.columns.difference(['next_windspeed', 'date']))
+features = list(df.columns.difference(['next_windspeed']))
 
 
 # Data Processing
@@ -192,7 +199,10 @@ def predict_from_inputs(date, latitude, longitude, central_pressure, max_sustain
         "next_windspeed": [0]
     })
 
-    # print(df_predict)
+    df_predict['date'] = pd.to_datetime(df_predict['date'], format = "%Y%m%d").dt.strftime('%Y-%m-%d')
+    df_predict['date'] = df_predict['date'].map(lambda x: pd.Timestamp(x).timestamp())
+
+    print(df_predict)
 
     predict_dataset = SequenceDataset(
         df_predict,
@@ -205,7 +215,7 @@ def predict_from_inputs(date, latitude, longitude, central_pressure, max_sustain
 
     prediction = prediction * target_stdev + target_mean
 
-    # print(prediction)
-    # print('--------------------------------------------------------------')
+    print(prediction)
+    print('--------------------------------------------------------------')
 
     return prediction
