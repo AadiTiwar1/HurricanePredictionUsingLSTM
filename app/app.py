@@ -177,10 +177,28 @@ if load_model_btn or st.session_state.loaded:
         <b style="color: teal;">{input_max_sustained_wind}</b>
         kt...
     """, unsafe_allow_html = True)
-    
+
+        if st.session_state.prediction >= 74 and st.session_state.prediction <= 95:
+            st.write("1")
+            
+        
+        if st.session_state.prediction >= 96 and st.session_state.prediction <= 110:
+            st.write("2")
+
+        if st.session_state.prediction >= 111 and st.session_state.prediction <= 129:
+            st.write("3")
+
+        if st.session_state.prediction >= 130 and st.session_state.prediction <= 156:
+            st.write("4")
+
+        if st.session_state.prediction >= 157:
+            st.write("5")
+
     if st.session_state.prediction is not None:
         st.code(f"Prediction: {st.session_state.prediction[0]} knots ({st.session_state.prediction[0] * 1.151} mph)", language="python")
 
+        
+        
 
 # **** FOR REFERENCE ****
 # ? GH LINK: https://github.com/cloudera/CML_AMP_Intelligent_Writing_Assistance
