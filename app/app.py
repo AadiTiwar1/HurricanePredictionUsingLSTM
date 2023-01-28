@@ -179,7 +179,25 @@ if load_model_btn or st.session_state.loaded:
     """, unsafe_allow_html = True)
     
     if st.session_state.prediction is not None:
-        st.code(f"Prediction: {st.session_state.prediction[0]} knots ({st.session_state.prediction[0] * 1.151} mph)", language="python")
+        category = 0
+        if st.session_state.prediction >= 74 and st.session_state.prediction <= 95:
+            category = 1
+        
+        if st.session_state.prediction >= 96 and st.session_state.prediction <= 110:
+            category = 2
+
+        if st.session_state.prediction >= 111 and st.session_state.prediction <= 129:
+            category = 3
+
+        if st.session_state.prediction >= 130 and st.session_state.prediction <= 156:
+            category = 4
+
+        if st.session_state.prediction >= 157:
+            category = 5
+
+        st.code(f"""
+            {"No hurricane" if category == 0 else f"Category {category} hurricane ({st.session_state.prediction[0]} knots or {st.session_state.prediction[0] * 1.151} mph)"}
+        """, language="python")
 
 
 # **** FOR REFERENCE ****
