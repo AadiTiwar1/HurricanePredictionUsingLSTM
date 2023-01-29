@@ -7,7 +7,7 @@ from torch import nn
 import torch
 from torch import nn
 import os
-from src.utils.Factory import SequenceDataset, ShallowRegressionLSTM
+from utils.Factory import SequenceDataset, ShallowRegressionLSTM
 
 def convert_lat_long(value):
     if value[-1] == 'S' or value[-1] == 'W':
