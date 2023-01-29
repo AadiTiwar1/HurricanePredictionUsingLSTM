@@ -46,7 +46,7 @@ st.download_button(
 
 if load_model_btn or st.session_state.loaded:
     with st.spinner(('Loading Model...' if MODEL_TRAINED_STATE is True else 'Training Model...')):
-        import scripts.train_model as model
+        import model
         # calculate the accuracy of the model
         st.code(f'Model Accuracy: {model.accuracy}%', language='ruby')
 
