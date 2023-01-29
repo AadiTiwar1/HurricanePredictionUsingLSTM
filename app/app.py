@@ -49,54 +49,56 @@ if load_model_btn or st.session_state.loaded:
         import model
         # calculate the accuracy of the model
         st.code(f'Model Accuracy: {model.accuracy}%', language='ruby')
+        if 'range1_start' not in st.session_state or 'range1_end' not in st.session_state:
+            st.session_state.range1_start = 0
+            st.session_state.range1_end = 0
+        
+        if 'range2_start' not in st.session_state or 'range2_end' not in st.session_state:
+            st.session_state.range2_start = 0
+            st.session_state.range2_end = 0
+
+        if 'range3_start' not in st.session_state or 'range3_end' not in st.session_state:
+            st.session_state.range3_start = 0
+            st.session_state.range3_end = 0
+
 
         # create the graphs of the data and predicted data
-        # TODO: add a slider to choose the range of data to show for all graphs
-        chart_data_windspeed = pd.DataFrame(
-            model.df_out,
-            columns = ["next_windspeed"]
-        )
-
-        chart_data_predict = pd.DataFrame(
-            model.df_out,
-            columns = ["Model Forecast"]
-        )
-
-        chart_data_overlap = pd.DataFrame(
-            model.df_out,
-            columns = ["next_windspeed", "Model Forecast"]
-        )
-
         st.header("Historical Data")
         show_historical_data = st.checkbox("Show/Hide Historical Data Graph")
         if show_historical_data:
             st.error("Uncheck the checkbox above if you don't need to see the historical data anymore as it may slow down the app.")
+            st.session_state.range1_start, st.session_state.range1_end = st.slider("Range of Historical Data", min_value=0, max_value=len(model.df_out), value=(0, 10000), step=1, key = "range1")
+
+            chart_data_windspeed = pd.DataFrame(
+                model.df_out.loc[st.session_state.range1_start:st.session_state.range1_end],
+                columns = ["next_windspeed"]
+            )
             st.line_chart(chart_data_windspeed)
 
         st.header("Predicted Data")
         show_predicted_data = st.checkbox("Show/Hide Predicted Data Graph")
         if show_predicted_data:
-            st.error("Uncheck the checkbox above if you don't need to see the predicted data anymore as it may slow down the app.")
-            st.line_chart(chart_data_predict)
+            st.error("Uncheck the checkbox above if you don't need to see the historical data anymore as it may slow down the app.")
+            st.session_state.range2_start, st.session_state.range2_end = st.slider("Range of Historical Data", min_value=0, max_value=len(model.df_out), value=(0, 10000), step=1, key = "range2")
+
+            chart_data_windspeed = pd.DataFrame(
+                model.df_out.loc[st.session_state.range2_start:st.session_state.range2_end],
+                columns = ["next_windspeed"]
+            )
+            st.line_chart(chart_data_windspeed)
 
         st.header("Data Overlap")
         show_predicted_data = st.checkbox("Show/Hide Overlapped Data Graph")
         if show_predicted_data:
-            st.error("Uncheck the checkbox above if you don't need to see the overlapped data anymore as it may slow down the app.")
-            st.line_chart(chart_data_overlap)
-        # TODO: create a vertical line to show where the test set starts
+            st.error("Uncheck the checkbox above if you don't need to see the historical data anymore as it may slow down the app.")
+            st.session_state.range3_start, st.session_state.range3_end = st.slider("Range of Historical Data", min_value=0, max_value=len(model.df_out), value=(0, 10000), step=1, key = "range3")
 
-        # ************************************************************************************************** #
-        # ? maybe try using matplotlib to plot the graph to show the vertical line where the test set starts ?
-        # fig = plt.figure(figsize=(12, 7))
-        # plt.plot(range(len(model.df_out)), model.df_out["windspeed"], label = "Real")
-        # plt.plot(range(len(model.df_out)), model.df_out["Model Forecast"], label = "LSTM Prediction")
-        # plt.ylabel('Wind Speed')
-        # plt.xlabel('Days')
-        # plt.vlines(model.size, ymin=0, ymax=100, label = "Test set start", linestyles = "dashed")
-        # plt.legend()
-        # st.pyplot(fig)
-        # ************************************************************************************************** #
+            chart_data_windspeed = pd.DataFrame(
+                model.df_out.loc[st.session_state.range3_start:st.session_state.range3_end],
+                columns = ["next_windspeed", "Model Forecast"]
+            )
+            st.line_chart(chart_data_windspeed)
+
 
     #* Section 3 is where the user can make predictions
     # DATE
