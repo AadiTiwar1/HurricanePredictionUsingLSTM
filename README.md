@@ -1,10 +1,10 @@
 # Introduction
 
-## Hurricane Windspeed Forecasting using Long Short Term Memory (LSTM) Recurrent Neural Networks (RNN)
+## The Model
 
 Hurricanes remain as one of the deadliest natural disasters on the planet, and the ability to predict information about upcoming hurricanes could save hundreds of lives and help people prepare for what's to come.
 
-## The Model
+### Hurricane Windspeed Forecasting using Long Short Term Memory (LSTM) Recurrent Neural Networks (RNN)
 
 Utilizing a Long Short Term Memory (LSTM) Recurrent Neural Network (RNN) to forecast the windspeeds of future hurricanes, our project aims to develop a unique, effective, and easy-to-use model that allows for various input parameters.
 
@@ -41,7 +41,7 @@ This repo provides scripts and examples that can help you predict hurricanes on 
 └── requirements.txt
 ```
 
-# Install dependencies
+## Install dependencies
 
 Python version >= 3.7 and <= 3.10
 
@@ -51,6 +51,8 @@ Python version >= 3.7 and <= 3.10
 - `matplotlib===3.5.3`
 - `torch===1.13.1`
 - `streamlit===1.17.0`
+- `tensorflow===2.11.0`
+- `scikit-learn===1.2.0`
 
 `pip3 install -r requirements.txt`
 
