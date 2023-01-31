@@ -17,7 +17,7 @@ def convert_lat_long(value):
 
 df = pd.read_csv('static/dataset/atlantic.csv', sep=',', index_col=False)
 
-df = df.loc[47750:].copy()
+df = df.loc[48000:].copy()
 
 df = df[['date', 'latitude', 'longitude', 'max_sustained_wind', 'central_pressure']]
 df['date'] = pd.to_datetime(df['date'], format = "%Y%m%d").dt.strftime('%Y-%m-%d')
@@ -42,7 +42,7 @@ scaler = scaler.fit(y)
 y = scaler.transform(y)
 
 # generate the input and output sequences
-n_lookback = 400  # length of input sequences (lookback period)
+n_lookback = 150  # length of input sequences (lookback period)
 n_forecast = 500  # length of output sequences (forecast period)
 
 X = []
@@ -78,7 +78,8 @@ df_past['Forecast'] = np.nan
 df_past['Forecast'].iloc[-1] = df_past['Actual'].iloc[-1]
 df_future = pd.DataFrame(columns=['Date', 'Actual', 'Forecast'])
 df_future['Date'] = pd.date_range(start=df_past['Date'].iloc[-1] + pd.Timedelta(days=1), periods=n_forecast)
-df_future['Forecast'] = Y_.flatten()
+# df_future['Forecast'] = Y_.flatten()
+df_future['Forecast'] = Y_
 df_future['Forecast'] = df_future['Forecast'].apply(lambda x: x*-1)
 df_future['Actual'] = np.nan
 

@@ -9,14 +9,12 @@ LATITUDE_CSV = pd.read_csv('static/dataset/latitude.csv', sep=',', index_col=Fal
 LONGITUDE_CSV = pd.read_csv('static/dataset/longitude.csv', sep=',', index_col=False)
 MAX_SUSTAINED_WIND_CSV = pd.read_csv('static/dataset/windspeed.csv', sep=',', index_col=False)
 
-LATITUDE_CSV = LATITUDE_CSV.loc[1356:].copy()
-LONGITUDE_CSV = LONGITUDE_CSV.loc[1356:].copy()
-MAX_SUSTAINED_WIND_CSV = MAX_SUSTAINED_WIND_CSV.loc[1356:].copy()
+LATITUDE_CSV = LATITUDE_CSV.loc[1107:].copy()
+LONGITUDE_CSV = LONGITUDE_CSV.loc[1107:].copy()
+MAX_SUSTAINED_WIND_CSV = MAX_SUSTAINED_WIND_CSV.loc[1107:].copy()
 
-START_DATE = datetime.datetime.strptime(LATITUDE_CSV['Date'].iloc[0], '%Y-%m-%d')
+START_DATE = datetime.datetime.strptime(LATITUDE_CSV.loc[LATITUDE_CSV['Date'] != np.nan]['Date'].values[0], '%Y-%m-%d')
 END_DATE = datetime.datetime.strptime(LATITUDE_CSV['Date'].iloc[-1], '%Y-%m-%d')
-
-print(START_DATE, END_DATE)
 
 @st.cache
 def convert_df(df: pd.DataFrame):
