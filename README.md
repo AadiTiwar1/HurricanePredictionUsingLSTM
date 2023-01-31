@@ -10,16 +10,7 @@ Utilizing a Long Short Term Memory (LSTM) Recurrent Neural Network (RNN) to fore
 
 To create predictions, you can use our interactive app that contains sliders which allow you to precisely enter inputs such as date, longitude, latitude and more to get an output in seconds for the windspeed at given those paramters. Based on these predicted results, one can easily determine the severity and category of the predicted hurricane.
 
-## Sources
-
-This repo is inspired from the contents of this [repo](https://github.com/DikshantDulal/SoftServe_QLSTM) which uses LSTM for stock prediction. We utilized the LSTM aspect of the project to Hurricane data and developed different columns with various learning rates and epochs to maximize accuracy.
-
-### Categorization of hurricanes given windspeed and pressure
-
-![Categorization of hurricanes given windspeed and pressure](./assets/image.png)
-[NOAA](https://www.ssd.noaa.gov/PS/TROP/CI-chart.html)
-
-# Overview of Long Short Term Memory (LSTM)
+## Overview of Long Short Term Memory (LSTM)
 
 As mentioned above, LSTM is a Recurrent Neural Network that can be used for time-series forecasting. LSTM solves the vanishing gradient problem that was common in earlier neural network models by implementing a forget layer. In short, it has an input, cell, forget, and output layer. In context of our project, it trains on data using features such as `Latitude`, `Longitude`, `Max_Central_Pressure` and other features to create a prediction for `tmrw_windspeed`.
 
@@ -74,3 +65,12 @@ Running the app will also allow you to train the model so you can skip the next 
 To train the model, run the following command:
 
 `python app/model.py`
+
+# Sources
+
+This repo is inspired from the contents of this [repo](https://github.com/DikshantDulal/SoftServe_QLSTM) which uses LSTM for stock prediction. We utilized the LSTM aspect of the project to Hurricane data and developed different columns with various learning rates and epochs to maximize accuracy.
+
+### Categorization of hurricanes given windspeed and pressure
+
+![Categorization of hurricanes given windspeed and pressure](./assets/image.png)
+[NOAA](https://www.ssd.noaa.gov/PS/TROP/CI-chart.html)
