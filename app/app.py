@@ -30,6 +30,9 @@ st.markdown(
         the model converges. After that, we visualize two different graphs: the 
         comparison between the real hurricane data and the ones given by the 
         model.
+        
+        Due to the fact that our data set ended in 2015, our model makes predictions up to 2017 (Techniqually in the future). 
+        Our model can also make prediction until 2035 but we decreased it to lower training time for easier testing
     """
 )
 
