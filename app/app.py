@@ -16,6 +16,10 @@ def convert_df(df: pd.DataFrame):
 st.title("Hurricane Prediction")
 st.markdown(
     """
+        ** Due to the fact that our data set ended in 2015, our model makes predictions up to 2017 
+        (Techniqually in the future). Our model can also make prediction until 2035 but we decreased 
+        it to lower training time for easier testing**
+        
         Predicting the windspeed of a hurricane from its latitude, 
         longitude, maximum sustained wind, and its central pressure.
 
