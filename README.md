@@ -74,7 +74,3 @@ This repo is inspired from the contents of this [repo](https://github.com/Diksha
 
 ![Categorization of hurricanes given windspeed and pressure](./assets/image.png)
 [NOAA](https://www.ssd.noaa.gov/PS/TROP/CI-chart.html)
-
-
-#Note from the creators
-To whoever is reading this, we are just 4 high schoolers trying to have fun in this hackathon. 3 of us didn't even know machine learning before this hackathon, and in total we have put ~150 hours into this project. We tried our best to make it understandable to people who have 0 data analysis experience. It would mean the world to us if we could get third place. 
