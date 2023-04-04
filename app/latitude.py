@@ -17,7 +17,7 @@ def convert_lat_long(value):
 
 df = pd.read_csv('static/dataset/atlantic.csv', sep=',', index_col=False)
 
-df = df.loc[48000:].copy()
+df = df.loc[48000:].copy() #we only want to work with a fraction of the data, working with too much will take too long to train
 
 df = df[['date', 'latitude', 'longitude', 'max_sustained_wind', 'central_pressure']]
 df['date'] = pd.to_datetime(df['date'], format = "%Y%m%d").dt.strftime('%Y-%m-%d')
@@ -45,14 +45,16 @@ y = scaler.transform(y)
 n_lookback = 150  # length of input sequences (lookback period)
 n_forecast = 500  # length of output sequences (forecast period)
 
-
+# Generate training sequences and target sequences
+# for the LSTM model 
 X = []
 Y = []
 
 for i in range(n_lookback, len(y) - n_forecast + 1):
     X.append(y[i - n_lookback: i])
     Y.append(y[i: i + n_forecast])
-
+    
+# Convert lists to NumPy arrays
 X = np.array(X)
 Y = np.array(Y)
 
@@ -61,8 +63,8 @@ model = Sequential()
 model.add(LSTM(units=5, return_sequences=True, input_shape=(n_lookback, 1)))
 model.add(LSTM(units=5))
 model.add(Dense(n_forecast))
-model.compile(loss='mean_squared_error', optimizer='adam')
-model.fit(X, Y, epochs=100, batch_size=16, verbose=0)
+model.compile(loss='mean_squared_error', optimizer='adam') #use mse for loss function and adam optimizer
+model.fit(X, Y, epochs=100, batch_size=16, verbose=0) #run for 100 epochs
 
 # generate the forecasts
 X_ = y[- n_lookback:]  # last available input sequence
