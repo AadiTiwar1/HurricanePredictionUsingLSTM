@@ -14,6 +14,17 @@ To create predictions, you can use our interactive app that contains sliders whi
 
 As mentioned above, LSTM is a Recurrent Neural Network that can be used for time-series forecasting. LSTM solves the vanishing gradient problem that was common in earlier neural network models by implementing a forget layer. In short, it has an input, cell, forget, and output layer. In context of our project, it trains on data using features such as `Latitude`, `Longitude`, `Max_Central_Pressure` and other features to create a prediction for `tmrw_windspeed`.
 
+## Model Graphs
+
+### Graph of the windspeed prediction
+
+![Categorization of hurricanes given windspeed and pressure](./assets/windspeedPredictionGraph.png)
+
+### Graph of the longitude prediction
+
+![Categorization of hurricanes given windspeed and pressure](./assets/windspeedPredictionGraph.png)
+
+
 # Instructions
 
 This repo provides scripts and examples that can help you predict hurricanes on your own computer. The repo also provides a [Jupyter Notebook](<https://github.com/AadiTiwar1/HurricanePredictionUsingLSTM/blob/main/src/HurricanePredictionDraft1%20(3).ipynb>) which contains all of the code in one place with text descriptions for the easisest learning experience. [Note: We highly reccomend just downloading the Jupyter Notebook and running that instead of downloading the entire project and running the files!] For a more file-seperated based version, our Repo structure and brief description of content is provided below:
@@ -57,7 +68,7 @@ To download the data, run the following command:
 
 To launch the app, run the following command:
 
-`streamlit run app/app.py` or `python -m streamlit run app/app.py` if the streamlit command does not work
+`streamlit run app/app.py` or `python -m streamlit run app/app.py` (if the streamlit command does not work).
 Running the app will also allow you to train the model so you can skip the next step if you want.
 
 ## Train model
@@ -74,7 +85,3 @@ This repo is inspired from the contents of this [repo](https://github.com/Diksha
 
 ![Categorization of hurricanes given windspeed and pressure](./assets/image.png)
 [NOAA](https://www.ssd.noaa.gov/PS/TROP/CI-chart.html)
-
-
-#Note from the creators
-To whoever is reading this, we are just 4 high schoolers trying to have fun in this hackathon. 3 of us didn't even know machine learning before this hackathon, and in total we have put ~150 hours into this project. We tried our best to make it understandable to people who have 0 data analysis experience. It would mean the world to us if we could get third place. 
